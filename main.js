@@ -175,5 +175,76 @@
     }
   }
 
+  /* ---------- 7. 自定义光标（带延迟圆环） ---------- */
+  var dot = $(".cursor");
+  var ring = $(".cursor-ring");
+  var finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
+  if (dot && ring && finePointer && !prefersReduced) {
+    var mouseX = window.innerWidth / 2;
+    var mouseY = window.innerHeight / 2;
+    var ringX = mouseX;
+    var ringY = mouseY;
+
+    document.addEventListener("mousemove", function (e) {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      document.body.classList.add("has-cursor");
+    });
+
+    document.addEventListener("mouseleave", function () {
+      document.body.classList.remove("has-cursor");
+    });
+
+    document.addEventListener("mouseover", function (e) {
+      var target = e.target;
+      var interactive = target.closest ? target.closest("a, button, .chips li") : null;
+      ring.classList.toggle("is-hover", Boolean(interactive));
+    });
+
+    (function moveCursor() {
+      ringX += (mouseX - ringX) * 0.16;
+      ringY += (mouseY - ringY) * 0.16;
+      dot.style.transform = "translate3d(" + mouseX + "px," + mouseY + "px,0) translate(-50%,-50%)";
+      ring.style.transform = "translate3d(" + ringX + "px," + ringY + "px,0) translate(-50%,-50%)";
+      requestAnimationFrame(moveCursor);
+    })();
+  }
+
+  /* ---------- 8. 导航锚点高亮（当前区块） ---------- */
+  var navLinks = $$(".nav__links a");
+  var sectionIds = ["about", "education", "skills", "projects", "works", "contact"];
+  var sections = sectionIds
+    .map(function (id) {
+      return document.getElementById(id);
+    })
+    .filter(Boolean);
+
+  if (navLinks.length && sections.length && "IntersectionObserver" in window) {
+    var linkFor = function (id) {
+      return $$('.nav__links a[href="#' + id + '"]')[0];
+    };
+    var activeObserver = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          navLinks.forEach(function (a) {
+            a.classList.remove("is-active");
+            a.removeAttribute("aria-current");
+          });
+          var link = linkFor(entry.target.id);
+          if (link) {
+            link.classList.add("is-active");
+            link.setAttribute("aria-current", "true");
+          }
+        });
+      },
+      { rootMargin: "-45% 0px -50% 0px", threshold: 0 }
+    );
+    sections.forEach(function (section) {
+      activeObserver.observe(section);
+    });
+  }
+
   /* ===== 后续迭代交互在此追加 ===== */
 })();

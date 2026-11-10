@@ -1203,4 +1203,186 @@ body.has-cursor .cursor-ring {
   border-bottom: 1px solid currentColor;
 }
 
+/* ---------- 15 联系方式 ---------- */
+.contact {
+  position: relative;
+  overflow: hidden;
+}
+
+.contact::before {
+  content: "";
+  position: absolute;
+  top: 8%;
+  right: -12%;
+  width: min(600px, 70vw);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--glow), transparent 65%);
+  pointer-events: none;
+}
+
+.contact-grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: clamp(24px, 4vw, 56px);
+  align-items: start;
+}
+
+.contact-mail {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: clamp(24px, 3.5vw, 40px);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  background-color: var(--paper-2);
+  color: inherit;
+  text-decoration: none;
+  transition: border-color var(--t) var(--ease), background-color var(--t) var(--ease),
+    transform var(--t) var(--ease);
+}
+
+.contact-mail:hover {
+  border-color: var(--accent);
+  transform: translateY(-3px);
+}
+
+.contact-mail__label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.contact-mail__value {
+  font-family: var(--font-display);
+  font-size: clamp(1.45rem, 3.6vw, 2.7rem);
+  line-height: 1.16;
+  word-break: break-word;
+  color: var(--ink);
+}
+
+.contact-mail__arrow {
+  position: absolute;
+  top: clamp(22px, 3vw, 34px);
+  right: clamp(22px, 3vw, 34px);
+  font-size: 20px;
+  color: var(--accent);
+  transition: transform var(--t) var(--ease);
+}
+
+.contact-mail {
+  position: relative;
+}
+
+.contact-mail:hover .contact-mail__arrow {
+  transform: translate(4px, -4px);
+}
+
+.contact-links {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--line);
+}
+
+.contact-links li a {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--line);
+  color: inherit;
+  text-decoration: none;
+  transition: color var(--t-fast) var(--ease), padding-left var(--t-fast) var(--ease);
+}
+
+.contact-links li a:hover {
+  color: var(--accent);
+  padding-left: 6px;
+}
+
+.contact-links li a > span:first-child {
+  font-weight: 500;
+}
+
+.contact-links__value {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-align: right;
+  color: var(--muted);
+  transition: color var(--t-fast) var(--ease);
+}
+
+.contact-links li a:hover .contact-links__value {
+  color: var(--accent);
+}
+
+/* ---------- 16 页脚 ---------- */
+.footer {
+  padding: clamp(30px, 5vw, 52px) 0;
+  border-top: 1px solid var(--line);
+  background-color: var(--paper);
+}
+
+.footer__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 28px;
+}
+
+.footer__copy,
+.footer__note {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  line-height: 1.7;
+  color: var(--muted);
+}
+
+.footer__note {
+  opacity: 0.8;
+}
+
+.footer__top {
+  display: inline-grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  color: var(--ink);
+  text-decoration: none;
+  transition: border-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease),
+    transform var(--t-fast) var(--ease);
+}
+
+.footer__top:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: translateY(-3px);
+}
+
+/* 锚点跳转时给固定导航留出空间 */
+section[id] {
+  scroll-margin-top: 84px;
+}
+
+/* ---------- 17 交互增强 ---------- */
+body.has-cursor,
+body.has-cursor a,
+body.has-cursor button {
+  cursor: none;
+}
+
+.nav__links a.is-active {
+  color: var(--accent);
+}
+
 /* ===== 后续迭代样式在此追加 ===== */
