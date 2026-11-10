@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- TODO: 替换为你自己的姓名与描述 -->
+  <title>你的名字 · 个人作品集 | 计算机科学与技术 2026 届</title>
+  <meta name="description" content="XX 大学计算机科学与技术专业 2026 届本科生的个人作品集：关于我、教育经历、技能栈、项目经历与作品，欢迎联系。" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="你的名字 · 个人作品集" />
+  <meta property="og:description" content="计算机科学与技术 2026 届 · 求职方向：后端开发。项目经历、技能与作品。" />
+  <meta name="theme-color" content="#f4efe4" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+
+  <!-- 在样式加载前应用主题，避免深色模式闪烁 -->
+  <script>
+    (function () {
+      document.documentElement.classList.add('js');
+      try {
+        var saved = localStorage.getItem('portfolio-theme');
+        if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        }
+      } catch (e) { /* 隐私模式下忽略 */ }
+    })();
+  </script>
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+
+  <div class="progress" aria-hidden="true"><span id="progress-bar"></span></div>
+  <div class="cursor" aria-hidden="true"></div>
+  <div class="cursor-ring" aria-hidden="true"></div>
+
+  <!-- 顶部导航 -->
+  <header class="nav" id="nav">
+    <div class="nav__inner">
+      <a class="brand" href="#top" aria-label="回到首屏">
+        <span class="brand__mark" aria-hidden="true">✳</span>
+        <span>你的名字</span>
+      </a>
+
+      <nav class="nav__links" aria-label="主导航">
+        <a href="#about">关于</a>
+        <a href="#education">教育</a>
+        <a href="#skills">技能</a>
+        <a href="#projects">项目</a>
+        <a href="#works">作品</a>
+        <a href="#contact">联系</a>
+      </nav>
+
+      <div class="nav__actions">
+        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="切换深色/浅色主题">
+          <span aria-hidden="true">◐</span>
+        </button>
+        <button class="menu-btn" id="menu-btn" type="button" aria-label="打开菜单" aria-expanded="false" aria-controls="mobile-menu">
+          <span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 移动端全屏菜单 -->
+  <nav class="mobile-menu" id="mobile-menu" aria-label="移动端导航" aria-hidden="true">
+    <a href="#about">关于 <span>01</span></a>
+    <a href="#education">教育 <span>02</span></a>
+    <a href="#skills">技能 <span>03</span></a>
+    <a href="#projects">项目 <span>04</span></a>
+    <a href="#works">作品 <span>05</span></a>
+    <a href="#contact">联系 <span>06</span></a>
+    <p class="mobile-menu__note">计算机科学与技术 · 2026 届</p>
+  </nav>
+
+  <main id="main">
+    <!-- ================= 首屏 ================= -->
+    <section class="hero" id="top">
+      <div class="hero__bg" aria-hidden="true">
+        <span class="shape shape--star">✳</span>
+        <span class="shape shape--ring"></span>
+        <span class="shape shape--blob"></span>
+      </div>
+
+      <div class="container hero__inner">
+        <p class="eyebrow" data-reveal>PORTFOLIO — 2026 · 求职中</p>
+
+        <h1 class="hero__title" data-reveal style="--d:.05s">
+          <span class="hero__hi">你好，我是</span>
+          <span class="hero__name"><em>你的名字</em><svg class="underline" viewBox="0 0 600 40" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M6 28C70 8 128 34 196 20S322 6 396 24 512 34 594 12" /></svg></span>
+        </h1>
+
+        <p class="hero__sub" data-reveal style="--d:.15s">
+          计算机科学与技术 · 2026 届毕业生。<br />
+          关注后端工程与数据可视化，喜欢把想法做成能用的东西。
+        </p>
+
+        <div class="hero__meta" data-reveal style="--d:.25s">
+          <span>XX 大学</span><span class="dot" aria-hidden="true">·</span>
+          <span>求职方向：后端开发</span><span class="dot" aria-hidden="true">·</span>
+          <span>预计 2026.06 毕业</span>
+        </div>
+
+        <div class="hero__cta" data-reveal style="--d:.35s">
+          <a class="btn btn--primary" href="#projects">查看项目 <span aria-hidden="true">↓</span></a>
+          <a class="btn btn--ghost" href="resume.pdf" download>下载简历 <span aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+
+      <div class="hero__footer">
+        <span class="scroll-hint">SCROLL</span>
+        <span class="hero__sticker">OPEN TO WORK</span>
+      </div>
+    </section>
+
+    <!-- 滚动横幅 -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee__track">
+        <div class="marquee__group">
+          <span>OPEN TO WORK</span><span class="marquee__star">✳</span>
+          <span>2026 届毕业生</span><span class="marquee__star">✳</span>
+          <span>计算机科学与技术</span><span class="marquee__star">✳</span>
+          <span>后端开发 / 全栈</span><span class="marquee__star">✳</span>
+          <span>把想法做成产品</span><span class="marquee__star">✳</span>
+        </div>
+        <div class="marquee__group">
+          <span>OPEN TO WORK</span><span class="marquee__star">✳</span>
+          <span>2026 届毕业生</span><span class="marquee__star">✳</span>
+          <span>计算机科学与技术</span><span class="marquee__star">✳</span>
+          <span>后端开发 / 全栈</span><span class="marquee__star">✳</span>
+          <span>把想法做成产品</span><span class="marquee__star">✳</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= 内容区块（后续迭代在此插入） ================= -->
+
+  </main>
+
+  <!-- ================= 页脚（后续迭代完善） ================= -->
+
+  <script src="main.js" defer></script>
+</body>
+</html>
