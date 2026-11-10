@@ -30,7 +30,7 @@
 | 简历文件 | `resume.pdf` | ⚠️ 占位 PDF（约 900 B），待替换真实简历 |
 | Nginx 站点配置 | `deploy/nginx.conf`（54 行） | ✅ 配置就绪，待上线验证 |
 | 一键部署脚本 | `scripts/deploy.sh`（57 行） | ✅ 完成，`bash -n` 通过 |
-| 过程文档 01–03 | `docs/01-requirements.md`、`02-design.md`、`03-plan.md` | ✅ 完成 |
+| 过程文档 01–05 | `docs/01-requirements.md`、`02-design.md`、`03-plan.md`、`05-git-record.md` | ✅ 完成 |
 | 部署手册、AI 使用说明、内容清单 | `docs/04-deployment.md`、`docs/06-ai-usage.md`、`docs/content-checklist.md` | ✅ 完成 |
 | 测试报告 | `docs/07-testing.md` | ✅ 完成 |
 | 项目总结 | `docs/08-summary.md`（本文） | ✅ 完成 |
@@ -53,7 +53,7 @@
 | 多端可用 | 断点 1080 / 920 / 620，320–1920 视口适配 | ⏳ 代码完成，真机与浏览器走查待做 |
 | 可访问性 | skip-link、语义标题、aria、focus-visible、reduced-motion | ⚠️ 大部分完成，浅色下 muted/accent 对比度偏低（DEF-03） |
 | 公网可访问 | 阿里云 ECS + 手装 Nginx + 公网 IP | ⏳ 服务器未购买，配置与脚本已就绪，未上线 |
-| 过程文档与 Git 记录 | 01–04、06–08 + content-checklist + 11 次规范提交 | ✅ 完成 |
+| 过程文档与 Git 记录 | 01–08 + content-checklist + 完整提交记录（见 `docs/05-git-record.md`） | ✅ 完成 |
 
 ## 3. 关键决策与取舍
 
@@ -81,7 +81,7 @@
 
 ### 4.2 提交脉络
 
-11 次提交对应一条清晰的演进线：初始化 → 文档 → 骨架 → 内容区块 → 交互 → 样式打磨 → 部署配置 → 文档补齐。每次提交都是一个可回滚点，`git log --oneline` 本身就是过程记录，比事后回忆靠谱。
+这串提交对应一条清晰的演进线：初始化 → 文档 → 骨架 → 内容区块 → 交互 → 样式打磨 → 部署配置 → 文档补齐。每次提交都是一个可回滚点，`git log --oneline` 本身就是过程记录，比事后回忆靠谱。
 
 ### 4.3 遇到的问题与解决
 
