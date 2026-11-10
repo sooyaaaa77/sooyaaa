@@ -17,6 +17,13 @@
   --accent-2: #1f4f7a;
   --glow: rgba(214, 79, 42, 0.12);
 
+  /* 反色区块（深色带）专用变量，随主题反相 */
+  --inv-paper: #1b1814;
+  --inv-ink: #f4efe4;
+  --inv-ink-2: rgba(244, 239, 228, 0.78);
+  --inv-muted: rgba(244, 239, 228, 0.58);
+  --inv-line: rgba(244, 239, 228, 0.22);
+
   --font-display: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia,
     "Noto Serif SC", "Source Han Serif SC", "Songti SC", STSong, serif;
   --font-sans: "Inter", "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB",
@@ -45,6 +52,12 @@
   --accent: #ff6b3d;
   --accent-2: #8fb8dd;
   --glow: rgba(255, 107, 61, 0.14);
+
+  --inv-paper: #f0e9db;
+  --inv-ink: #151310;
+  --inv-ink-2: rgba(21, 19, 16, 0.78);
+  --inv-muted: rgba(21, 19, 16, 0.6);
+  --inv-line: rgba(21, 19, 16, 0.2);
 }
 
 /* ---------- 02 重置与基础 ---------- */
@@ -708,8 +721,13 @@ body.has-cursor .cursor-ring {
 }
 
 .section--ink {
-  background-color: var(--ink);
-  color: var(--paper);
+  background-color: var(--inv-paper);
+  color: var(--inv-ink);
+  --line: var(--inv-line);
+  --muted: var(--inv-muted);
+  --ink-2: var(--inv-ink-2);
+  --paper: var(--inv-paper);
+  --paper-2: var(--inv-paper);
 }
 
 .section-head {
@@ -999,6 +1017,190 @@ body.has-cursor .cursor-ring {
   margin-left: 8px;
   color: var(--accent);
   animation: scroll-pulse 2s var(--ease) infinite;
+}
+
+/* ---------- 13 项目经历 ---------- */
+.projects {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--line);
+}
+
+.project {
+  display: grid;
+  grid-template-columns: minmax(56px, 84px) minmax(0, 1fr);
+  gap: clamp(16px, 3vw, 40px);
+  padding: clamp(26px, 3.5vw, 42px) 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.project__num {
+  margin: 3px 0 0;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+}
+
+.project__top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 18px;
+  margin-bottom: 12px;
+}
+
+.project__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(1.42rem, 2.6vw, 2.15rem);
+  line-height: 1.22;
+  letter-spacing: -0.01em;
+}
+
+.project__meta {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.project__desc,
+.project__result {
+  max-width: 70ch;
+  margin: 0 0 12px;
+  color: var(--ink-2);
+}
+
+.project__result {
+  font-size: 0.95em;
+  color: var(--ink-2);
+  opacity: 0.92;
+}
+
+.project__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 18px;
+}
+
+.link-arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color var(--t-fast) var(--ease), gap var(--t-fast) var(--ease);
+}
+
+.link-arrow:hover {
+  border-bottom-color: var(--accent);
+  gap: 13px;
+}
+
+/* ---------- 14 个人作品 ---------- */
+.works {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(16px, 2.4vw, 26px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.work__link {
+  display: block;
+  height: 100%;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  background-color: var(--paper);
+  color: inherit;
+  text-decoration: none;
+  transition: transform var(--t) var(--ease), border-color var(--t) var(--ease),
+    box-shadow var(--t) var(--ease);
+}
+
+.work__link:hover {
+  transform: translateY(-6px);
+  border-color: var(--accent);
+  box-shadow: 0 22px 44px -28px rgba(0, 0, 0, 0.5);
+}
+
+.work__visual {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-bottom: 1px solid var(--line);
+  background: linear-gradient(150deg, var(--paper-2), var(--paper) 70%);
+}
+
+.work__visual::after {
+  content: "";
+  position: absolute;
+  inset: -25%;
+  background: radial-gradient(circle at 30% 25%, var(--glow), transparent 58%);
+}
+
+.work__glyph {
+  position: relative;
+  z-index: 1;
+  font-size: clamp(34px, 4vw, 54px);
+  line-height: 1;
+  color: var(--accent);
+  transition: transform var(--t) var(--ease);
+}
+
+.work__link:hover .work__glyph {
+  transform: scale(1.12) rotate(-6deg);
+}
+
+.work__info {
+  display: block;
+  padding: 18px 20px 20px;
+}
+
+.work__title {
+  display: block;
+  margin-bottom: 5px;
+  font-family: var(--font-display);
+  font-size: 1.12rem;
+  line-height: 1.32;
+}
+
+.work__meta {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.works-note {
+  margin: clamp(28px, 4vw, 42px) 0 0;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.03em;
+  color: var(--muted);
+}
+
+.works-note a {
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid currentColor;
 }
 
 /* ===== 后续迭代样式在此追加 ===== */
