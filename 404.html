@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>页面走丢了 · 404</title>
+  <meta name="robots" content="noindex" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="style.css" />
+  <script>
+    /* 与首页一致：优先读取已保存的主题 */
+    (function () {
+      try {
+        var saved = localStorage.getItem("portfolio-theme");
+        var theme = saved || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+        document.documentElement.setAttribute("data-theme", theme);
+      } catch (e) {
+        /* 忽略 */
+      }
+    })();
+  </script>
+</head>
+<body>
+  <main class="section" id="main">
+    <div class="container">
+      <p class="kicker"><span class="kicker__num">404</span> 页面不存在</p>
+      <h1 class="section-title">这个页面<em>走丢了</em>。</h1>
+      <p class="section-lead">
+        你要找的地址可能已经改名，或者从来没有存在过。<br />
+        回到首页看看，或者直接发邮件给我。
+      </p>
+      <p class="hero__cta">
+        <a class="btn btn--primary" href="/">回到首页 <span aria-hidden="true">↗</span></a>
+        <a class="link-arrow" href="mailto:you@example.com">you@example.com <span aria-hidden="true">↗</span></a>
+      </p>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <p class="footer__copy">© <span id="year">2026</span> 你的名字</p>
+      <a class="footer__top" href="/" aria-label="回到首页">↑</a>
+    </div>
+  </footer>
+
+  <script>
+    var y = document.getElementById("year");
+    if (y) y.textContent = String(new Date().getFullYear());
+  </script>
+</body>
+</html>
