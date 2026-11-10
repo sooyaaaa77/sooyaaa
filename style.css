@@ -1385,4 +1385,146 @@ body.has-cursor button {
   color: var(--accent);
 }
 
+/* ---------- 18 响应式布局 ---------- */
+@media (max-width: 1080px) {
+  .nav__links {
+    gap: 18px;
+    font-size: 0.86rem;
+  }
+}
+
+@media (max-width: 920px) {
+  .nav__links {
+    display: none;
+  }
+
+  .menu-btn {
+    display: flex;
+  }
+
+  .about-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .about-side {
+    position: static;
+    max-width: 340px;
+  }
+
+  .works {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .skills-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px 24px;
+  }
+
+  .contact-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px 18px;
+  }
+
+  .footer__inner {
+    justify-content: flex-start;
+  }
+
+  .footer__top {
+    margin-left: auto;
+  }
+}
+
+@media (max-width: 620px) {
+  .works {
+    grid-template-columns: 1fr;
+  }
+
+  .skills-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .timeline .tl-item {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .tl-year {
+    margin-top: 0;
+  }
+
+  .project {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+
+  .project__num {
+    margin-bottom: 6px;
+  }
+
+  .project__foot {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .pullquote {
+    font-size: 1.28rem;
+    line-height: 1.55;
+  }
+
+  .contact-mail__value {
+    font-size: 1.22rem;
+  }
+
+  .contact-links li a {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .contact-links__value {
+    text-align: left;
+  }
+
+  .hero__footer {
+    align-items: flex-end;
+    padding-bottom: 20px;
+  }
+
+  .hero__sticker {
+    display: none;
+  }
+
+  .cursor,
+  .cursor-ring {
+    display: none;
+  }
+}
+
+/* ---------- 19 降低动效偏好 ---------- */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  .cursor,
+  .cursor-ring {
+    display: none;
+  }
+
+  .marquee__track {
+    animation: none !important;
+  }
+}
+
 /* ===== 后续迭代样式在此追加 ===== */
