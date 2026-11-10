@@ -128,5 +128,52 @@
     yearEl.textContent = String(new Date().getFullYear());
   }
 
+  /* ---------- 6. 数字滚动（关于我 · 数据统计） ---------- */
+  var statNums = $$(".stat__num");
+
+  function countUp(el) {
+    var target = parseInt(el.getAttribute("data-count"), 10);
+    var suffix = el.getAttribute("data-suffix") || "";
+    if (isNaN(target)) return;
+    if (prefersReduced) {
+      el.textContent = target + suffix;
+      return;
+    }
+    var duration = 1200;
+    var start = performance.now();
+    function tick(now) {
+      var p = Math.min((now - start) / duration, 1);
+      var eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(target * eased) + suffix;
+      if (p < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  if (statNums.length) {
+    if (prefersReduced || !("IntersectionObserver" in window)) {
+      statNums.forEach(countUp);
+    } else {
+      /* 先归零，等滚动到可见区域再计数；无 JS 时保留 HTML 里的最终数值 */
+      statNums.forEach(function (el) {
+        el.textContent = "0" + (el.getAttribute("data-suffix") || "");
+      });
+      var statObserver = new IntersectionObserver(
+        function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              countUp(entry.target);
+              statObserver.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.6 }
+      );
+      statNums.forEach(function (el) {
+        statObserver.observe(el);
+      });
+    }
+  }
+
   /* ===== 后续迭代交互在此追加 ===== */
 })();
