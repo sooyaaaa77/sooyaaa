@@ -1,7 +1,8 @@
 /* ============================================================
    个人作品集 · main.js
    原生 JavaScript，无第三方依赖。
-   基础部分：主题切换 / 滚动进度条 / 导航状态 / 进场动画 / 移动菜单
+   功能：主题切换 / 滚动进度条 / 导航状态 / 进场动画 / 移动菜单
+       数字滚动 / 导航锚点高亮
    ============================================================ */
 (function () {
   "use strict";
@@ -26,7 +27,7 @@
     }
     var meta = document.querySelector('meta[name="theme-color"]');
     if (meta) {
-      meta.setAttribute("content", theme === "dark" ? "#151310" : "#f4efe4");
+      meta.setAttribute("content", theme === "dark" ? "#0f0f0f" : "#ffffff");
     }
   }
 
@@ -48,7 +49,7 @@
       try {
         localStorage.setItem(THEME_KEY, next);
       } catch (e) {
-        /* 忽略存储失败 */
+        /* 忽略存储失败（隐私模式等） */
       }
     });
   }
@@ -69,6 +70,7 @@
   }
 
   window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", onScroll);
   onScroll();
 
   /* ---------- 3. 进场动画（IntersectionObserver） ---------- */
@@ -95,9 +97,10 @@
     });
   }
 
-  /* ---------- 4. 移动端全屏菜单 ---------- */
+  /* ---------- 4. 移动端全屏菜单（含焦点管理） ---------- */
   var menuBtn = $("#menu-btn");
   var mobileMenu = $("#mobile-menu");
+  var menuLinks = mobileMenu ? $$("a", mobileMenu) : [];
 
   function setMenu(open) {
     if (!menuBtn || !mobileMenu) return;
@@ -106,19 +109,46 @@
     mobileMenu.setAttribute("aria-hidden", String(!open));
     mobileMenu.classList.toggle("is-open", open);
     document.body.classList.toggle("menu-open", open);
+    if (open && menuLinks.length) {
+      menuLinks[0].focus();
+    }
   }
 
   if (menuBtn && mobileMenu) {
     menuBtn.addEventListener("click", function () {
-      setMenu(menuBtn.getAttribute("aria-expanded") !== "true");
+      var willOpen = menuBtn.getAttribute("aria-expanded") !== "true";
+      setMenu(willOpen);
+      if (!willOpen) menuBtn.focus();
     });
-    $$("a", mobileMenu).forEach(function (link) {
+
+    menuLinks.forEach(function (link) {
       link.addEventListener("click", function () {
         setMenu(false);
       });
     });
+
     document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape") setMenu(false);
+      var open = menuBtn.getAttribute("aria-expanded") === "true";
+      if (!open) return;
+
+      if (e.key === "Escape") {
+        setMenu(false);
+        menuBtn.focus();
+        return;
+      }
+
+      /* 简单的焦点陷阱：Tab 只在菜单内循环 */
+      if (e.key === "Tab" && menuLinks.length) {
+        var first = menuLinks[0];
+        var last = menuLinks[menuLinks.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
     });
   }
 
@@ -175,43 +205,7 @@
     }
   }
 
-  /* ---------- 7. 自定义光标（带延迟圆环） ---------- */
-  var dot = $(".cursor");
-  var ring = $(".cursor-ring");
-  var finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
-
-  if (dot && ring && finePointer && !prefersReduced) {
-    var mouseX = window.innerWidth / 2;
-    var mouseY = window.innerHeight / 2;
-    var ringX = mouseX;
-    var ringY = mouseY;
-
-    document.addEventListener("mousemove", function (e) {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-      document.body.classList.add("has-cursor");
-    });
-
-    document.addEventListener("mouseleave", function () {
-      document.body.classList.remove("has-cursor");
-    });
-
-    document.addEventListener("mouseover", function (e) {
-      var target = e.target;
-      var interactive = target.closest ? target.closest("a, button, .chips li") : null;
-      ring.classList.toggle("is-hover", Boolean(interactive));
-    });
-
-    (function moveCursor() {
-      ringX += (mouseX - ringX) * 0.16;
-      ringY += (mouseY - ringY) * 0.16;
-      dot.style.transform = "translate3d(" + mouseX + "px," + mouseY + "px,0) translate(-50%,-50%)";
-      ring.style.transform = "translate3d(" + ringX + "px," + ringY + "px,0) translate(-50%,-50%)";
-      requestAnimationFrame(moveCursor);
-    })();
-  }
-
-  /* ---------- 8. 导航锚点高亮（当前区块） ---------- */
+  /* ---------- 7. 导航锚点高亮（当前区块） ---------- */
   var navLinks = $$(".nav__links a");
   var sectionIds = ["about", "education", "skills", "projects", "works", "contact"];
   var sections = sectionIds
@@ -227,15 +221,20 @@
     var activeObserver = new IntersectionObserver(
       function (entries) {
         entries.forEach(function (entry) {
-          if (!entry.isIntersecting) return;
-          navLinks.forEach(function (a) {
-            a.classList.remove("is-active");
-            a.removeAttribute("aria-current");
-          });
           var link = linkFor(entry.target.id);
-          if (link) {
-            link.classList.add("is-active");
-            link.setAttribute("aria-current", "true");
+          if (entry.isIntersecting) {
+            navLinks.forEach(function (a) {
+              a.classList.remove("is-active");
+              a.removeAttribute("aria-current");
+            });
+            if (link) {
+              link.classList.add("is-active");
+              link.setAttribute("aria-current", "true");
+            }
+          } else if (link && link.classList.contains("is-active")) {
+            /* 区块离开高亮带但暂时没有新区块进入时，取消高亮 */
+            link.classList.remove("is-active");
+            link.removeAttribute("aria-current");
           }
         });
       },

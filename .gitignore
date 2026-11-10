@@ -22,3 +22,8 @@ deploy/local.conf
 
 # 个人真实简历（如需保留在本地，部署时再手动上传）
 resume-private.pdf
+
+# 开发自检产物与临时目录
+previews/
+_scratch/
+.dsh-migration-backup/
