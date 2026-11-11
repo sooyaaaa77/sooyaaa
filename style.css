@@ -22,9 +22,10 @@
   --line: #e4e4de;
   --line-strong: #c9c9c2;
 
-  /* 唯一的强调色 */
-  --accent: #e8452c;
-  --accent-soft: #fbeae5;
+  /* 唯一的强调色：白底上对比度 4.9:1，白字压红底同样 4.9:1 */
+  --accent: #cf3a22;
+  --accent-solid: #cf3a22;
+  --accent-soft: #f7e3dd;
 
   /* 作品封面的四张“卡纸”，颜色只出现在这里 */
   --mat-1: #f3ddd4;
@@ -65,7 +66,8 @@
   --faint: #6f6e68;
   --line: #2e2e2a;
   --line-strong: #474741;
-  --accent: #ff5c40;
+  --accent: #ff6a4d; /* 深色底上 6.6:1 */
+  --accent-solid: #cf3a22;
   --accent-soft: #2a1a16;
   --shadow-ink: rgba(255, 255, 255, 0.12);
 }
@@ -301,8 +303,8 @@ ol {
 }
 
 .sticker--red {
-  background: var(--accent);
-  border-color: var(--accent);
+  background: var(--accent-solid);
+  border-color: var(--accent-solid);
   color: #ffffff;
 }
 
@@ -591,7 +593,7 @@ section#top {
   z-index: 2;
   padding: 7px 10px;
   border-radius: 4px;
-  background: var(--accent);
+  background: var(--accent-solid);
   color: #ffffff;
   font-family: var(--mono);
   font-size: 9.5px;
@@ -1108,7 +1110,7 @@ section#top {
   flex: none;
   padding: 3px 7px;
   border-radius: 3px;
-  background: var(--accent);
+  background: var(--accent-solid);
   color: #ffffff;
   font-family: var(--mono);
   font-size: 9px;
@@ -1562,7 +1564,7 @@ section#top {
 }
 
 [data-theme="dark"] .sticker--red {
-  background: var(--accent);
+  background: var(--accent-solid);
   color: #ffffff;
 }
 
