@@ -140,6 +140,16 @@ async function capture(name, width, height, opts = {}) {
   const scrollY = await evalJs("window.scrollY");
   if (scrollY !== 0) console.warn("滚动未归零：", scrollY);
 
+  /* 可选：滚到指定位置后再截视口，用于检查吸顶导航 */
+  if (opts.scrollTo) {
+    await evalJs(
+      "var el=document.querySelector(" + JSON.stringify(opts.scrollTo) + ");" +
+        "if(el){window.scrollTo(0, el.getBoundingClientRect().top + window.scrollY - 260);}" +
+        "true"
+    );
+    await sleep(700);
+  }
+
   const full = opts.full !== false;
   let clip;
   if (full) {
@@ -164,6 +174,7 @@ try {
   if (mode === "desktop" || mode === "all") {
     await capture("desktop-full", 1440, 900);
     await capture("desktop-hero", 1440, 900, { full: false });
+    await capture("desktop-sticky", 1440, 900, { full: false, scrollTo: "#projects" });
   }
   if (mode === "mobile" || mode === "all") {
     await capture("mobile-full", 390, 844);

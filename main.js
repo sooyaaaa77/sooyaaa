@@ -1,8 +1,8 @@
 /* ============================================================
-   个人作品集 · main.js
+   个人作品集 · main.js（v0.3）
    原生 JavaScript，无第三方依赖。
-   功能：主题切换 / 滚动进度条 / 导航状态 / 进场动画 / 移动菜单
-       数字滚动 / 导航锚点高亮
+   功能：主题切换 / 滚动进度条 / 章节导航吸顶高亮 / 进场动画
+       移动端全屏菜单（含焦点陷阱）/ 数字滚动 / 页码年份
    ============================================================ */
 (function () {
   "use strict";
@@ -23,11 +23,14 @@
   function applyTheme(theme) {
     root.setAttribute("data-theme", theme);
     if (themeBtn) {
-      themeBtn.setAttribute("aria-label", theme === "dark" ? "切换到浅色主题" : "切换到深色主题");
+      themeBtn.setAttribute(
+        "aria-label",
+        theme === "dark" ? "切换到浅色主题" : "切换到深色主题"
+      );
     }
     var meta = document.querySelector('meta[name="theme-color"]');
     if (meta) {
-      meta.setAttribute("content", theme === "dark" ? "#0f0f0f" : "#ffffff");
+      meta.setAttribute("content", theme === "dark" ? "#121211" : "#ffffff");
     }
   }
 
@@ -39,8 +42,8 @@
     }
   }
 
-  var systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-  applyTheme(readSavedTheme() || (systemDark ? "dark" : "light"));
+  /* 默认白底；只有用户主动切到深色并保存后才保持深色 */
+  applyTheme(readSavedTheme() === "dark" ? "dark" : "light");
 
   if (themeBtn) {
     themeBtn.addEventListener("click", function () {
@@ -54,18 +57,14 @@
     });
   }
 
-  /* ---------- 2. 滚动进度条与导航状态 ---------- */
+  /* ---------- 2. 滚动进度条 ---------- */
   var bar = $("#progress-bar");
-  var nav = $("#nav");
 
   function onScroll() {
     var doc = document.documentElement;
     var max = doc.scrollHeight - window.innerHeight;
     if (bar) {
       bar.style.width = (max > 0 ? (window.scrollY / max) * 100 : 0) + "%";
-    }
-    if (nav) {
-      nav.classList.toggle("is-scrolled", window.scrollY > 24);
     }
   }
 
@@ -90,7 +89,7 @@
           }
         });
       },
-      { threshold: 0.12, rootMargin: "0px 0px -8% 0px" }
+      { threshold: 0.1, rootMargin: "0px 0px -6% 0px" }
     );
     revealItems.forEach(function (el) {
       revealObserver.observe(el);
@@ -100,17 +99,35 @@
   /* ---------- 4. 移动端全屏菜单（含焦点管理） ---------- */
   var menuBtn = $("#menu-btn");
   var mobileMenu = $("#mobile-menu");
+  var menuClose = $("#menu-close");
   var menuLinks = mobileMenu ? $$("a", mobileMenu) : [];
+  var menuFocusables = menuClose
+    ? [menuClose].concat(menuLinks)
+    : menuLinks.slice();
 
   function setMenu(open) {
     if (!menuBtn || !mobileMenu) return;
+
     menuBtn.setAttribute("aria-expanded", String(open));
     menuBtn.setAttribute("aria-label", open ? "关闭菜单" : "打开菜单");
-    mobileMenu.setAttribute("aria-hidden", String(!open));
-    mobileMenu.classList.toggle("is-open", open);
     document.body.classList.toggle("menu-open", open);
-    if (open && menuLinks.length) {
-      menuLinks[0].focus();
+
+    if (open) {
+      mobileMenu.hidden = false;
+      mobileMenu.setAttribute("aria-hidden", "false");
+      /* 下一帧再加类，让透明度过渡生效 */
+      requestAnimationFrame(function () {
+        mobileMenu.classList.add("is-open");
+        if (menuClose) menuClose.focus();
+      });
+    } else {
+      mobileMenu.classList.remove("is-open");
+      mobileMenu.setAttribute("aria-hidden", "true");
+      window.setTimeout(function () {
+        if (menuBtn.getAttribute("aria-expanded") !== "true") {
+          mobileMenu.hidden = true;
+        }
+      }, 260);
     }
   }
 
@@ -127,6 +144,13 @@
       });
     });
 
+    if (menuClose) {
+      menuClose.addEventListener("click", function () {
+        setMenu(false);
+        menuBtn.focus();
+      });
+    }
+
     document.addEventListener("keydown", function (e) {
       var open = menuBtn.getAttribute("aria-expanded") === "true";
       if (!open) return;
@@ -137,10 +161,10 @@
         return;
       }
 
-      /* 简单的焦点陷阱：Tab 只在菜单内循环 */
-      if (e.key === "Tab" && menuLinks.length) {
-        var first = menuLinks[0];
-        var last = menuLinks[menuLinks.length - 1];
+      /* 焦点陷阱：Tab 只在菜单内的可聚焦元素之间循环 */
+      if (e.key === "Tab" && menuFocusables.length) {
+        var first = menuFocusables[0];
+        var last = menuFocusables[menuFocusables.length - 1];
         if (e.shiftKey && document.activeElement === first) {
           e.preventDefault();
           last.focus();
@@ -184,7 +208,7 @@
     if (prefersReduced || !("IntersectionObserver" in window)) {
       statNums.forEach(countUp);
     } else {
-      /* 先归零，等滚动到可见区域再计数；无 JS 时保留 HTML 里的最终数值 */
+      /* 先归零，滚动到可见区域再计数；无 JS 时保留 HTML 里的最终数值 */
       statNums.forEach(function (el) {
         el.textContent = "0" + (el.getAttribute("data-suffix") || "");
       });
@@ -205,8 +229,8 @@
     }
   }
 
-  /* ---------- 7. 导航锚点高亮（当前区块） ---------- */
-  var navLinks = $$(".nav__links a");
+  /* ---------- 7. 章节导航锚点高亮（吸顶栏） ---------- */
+  var navLinks = $$(".subnav__links a");
   var sectionIds = ["about", "education", "skills", "projects", "works", "contact"];
   var sections = sectionIds
     .map(function (id) {
@@ -216,7 +240,7 @@
 
   if (navLinks.length && sections.length && "IntersectionObserver" in window) {
     var linkFor = function (id) {
-      return $$('.nav__links a[href="#' + id + '"]')[0];
+      return $$('.subnav__links a[href="#' + id + '"]')[0];
     };
     var activeObserver = new IntersectionObserver(
       function (entries) {
@@ -232,13 +256,13 @@
               link.setAttribute("aria-current", "true");
             }
           } else if (link && link.classList.contains("is-active")) {
-            /* 区块离开高亮带但暂时没有新区块进入时，取消高亮 */
+            /* 离开高亮带且暂无新区块进入时，取消高亮 */
             link.classList.remove("is-active");
             link.removeAttribute("aria-current");
           }
         });
       },
-      { rootMargin: "-45% 0px -50% 0px", threshold: 0 }
+      { rootMargin: "-40% 0px -55% 0px", threshold: 0 }
     );
     sections.forEach(function (section) {
       activeObserver.observe(section);

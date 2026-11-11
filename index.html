@@ -3,137 +3,144 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <!-- TODO: 替换为你自己的姓名与描述 -->
-  <title>你的名字 · 个人作品集 | UE5 虚拟制片 &amp; 实时影像</title>
-  <meta name="description" content="XX 大学计算机科学与技术专业 2026 届本科生的个人作品集，方向为 UE5 实时渲染、虚拟制片与影视后期：项目经历、影像作品与技能。" />
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content="你的名字 · 个人作品集" />
-  <meta property="og:description" content="计算机科学与技术 2026 届 · UE5 虚拟制片 / 实时影像 / 影视后期。项目经历、技能与作品。" />
+  <title>唐小伟 · 作品集 — UE5 虚拟制片与实时影像</title>
+  <meta name="description" content="唐小伟，XX 大学计算机科学与技术专业 2024 级。关注 UE5 实时渲染、虚拟制片与影像叙事，求职方向：UE5 虚拟制片 / 影视后期。" />
+  <meta name="author" content="唐小伟" />
   <meta name="theme-color" content="#ffffff" />
-  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <meta property="og:title" content="唐小伟 · 作品集" />
+  <meta property="og:description" content="UE5 虚拟制片 × 影像叙事。计算机专业 2024 级，用手写 HTML / CSS / JS 搭的个人作品集。" />
+  <meta property="og:type" content="website" />
 
-  <!-- 在样式加载前应用主题，避免深色模式闪烁 -->
+  <!-- 首屏前置脚本：尽早应用主题，避免闪烁（localStorage 键：portfolio-theme） -->
   <script>
     (function () {
-      document.documentElement.classList.add('js');
+      var d = document.documentElement;
+      d.classList.add('js');
       try {
-        var saved = localStorage.getItem('portfolio-theme');
-        if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-          document.documentElement.setAttribute('data-theme', 'dark');
-        }
-      } catch (e) { /* 隐私模式下忽略 */ }
+        var t = localStorage.getItem('portfolio-theme');
+        if (t === 'dark') d.setAttribute('data-theme', 'dark');
+      } catch (e) {}
     })();
   </script>
 
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <a class="skip-link" href="#main">跳到主要内容</a>
 
-  <div class="progress" aria-hidden="true"><span id="progress-bar"></span></div>
+  <div class="progress" id="progress-bar" aria-hidden="true"></div>
 
-  <!-- 顶部导航 -->
-  <header class="nav" id="nav">
-    <div class="nav__inner">
-      <a class="brand" href="#top" aria-label="回到首屏">
-        <span class="brand__mark" aria-hidden="true">✳</span>
-        <span>你的名字</span>
+  <!-- ================= 页头：品牌标语 + 贴纸按钮 ================= -->
+  <header class="masthead">
+    <div class="container masthead__inner">
+      <p class="masthead__tagline">
+        <span class="masthead__tagline-en">A PORTFOLIO THAT</span>
+        <span class="masthead__tagline-cn">用实时引擎，讲看得见的故事</span>
+      </p>
+
+      <a class="logo" href="#top" aria-label="回到首页">
+        <span class="logo__main">Portfolio</span>
+        <span class="logo__year" aria-hidden="true">2026</span>
       </a>
 
-      <nav class="nav__links" aria-label="主导航">
-        <a href="#about">关于</a>
-        <a href="#education">教育</a>
-        <a href="#skills">技能</a>
-        <a href="#projects">项目</a>
-        <a href="#works">作品</a>
-        <a href="#contact">联系</a>
-      </nav>
-
-      <div class="nav__actions">
-        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="切换深色/浅色主题">
-          <span aria-hidden="true">◐</span>
+      <div class="masthead__actions">
+        <a class="pill" href="#about">关于</a>
+        <a class="pill pill--dashed" href="#projects">项目 <span aria-hidden="true">↗</span></a>
+        <a class="pill pill--solid" href="#contact">联系</a>
+        <button class="icon-btn theme-toggle" id="theme-toggle" type="button" aria-label="切换深色 / 浅色主题">
+          <span class="theme-toggle__icon" aria-hidden="true">◐</span>
         </button>
-        <button class="menu-btn" id="menu-btn" type="button" aria-label="打开菜单" aria-expanded="false" aria-controls="mobile-menu">
-          <span></span><span></span>
+        <button class="icon-btn menu-btn" id="menu-btn" type="button" aria-label="打开菜单" aria-expanded="false" aria-controls="mobile-menu">
+          <span class="menu-btn__bars" aria-hidden="true"><i></i><i></i></span>
         </button>
       </div>
     </div>
   </header>
 
-  <!-- 移动端全屏菜单 -->
-  <nav class="mobile-menu" id="mobile-menu" aria-label="移动端导航" aria-hidden="true">
-    <a href="#about">关于 <span>01</span></a>
-    <a href="#education">教育 <span>02</span></a>
-    <a href="#skills">技能 <span>03</span></a>
-    <a href="#projects">项目 <span>04</span></a>
-    <a href="#works">作品 <span>05</span></a>
-    <a href="#contact">联系 <span>06</span></a>
-    <p class="mobile-menu__note">计算机科学与技术 · 2026 届 · UE5 × 影像</p>
-  </nav>
+  <!-- ================= 章节导航：滚动吸顶 ================= -->
+  <div class="subnav" id="subnav">
+    <div class="container subnav__inner">
+      <span class="subnav__label" aria-hidden="true">INDEX</span>
+      <nav class="subnav__links" aria-label="章节导航">
+        <a href="#about"><span class="subnav__num">01</span>关于</a>
+        <a href="#education"><span class="subnav__num">02</span>教育</a>
+        <a href="#skills"><span class="subnav__num">03</span>技能</a>
+        <a href="#projects"><span class="subnav__num">04</span>项目</a>
+        <a href="#works"><span class="subnav__num">05</span>作品</a>
+        <a href="#contact"><span class="subnav__num">06</span>联系</a>
+      </nav>
+    </div>
+  </div>
+
+  <!-- ================= 全屏菜单（移动端） ================= -->
+  <div class="mobile-menu" id="mobile-menu" hidden>
+    <button class="mobile-menu__close" id="menu-close" type="button" aria-label="关闭菜单">
+      <span aria-hidden="true">×</span> 关闭
+    </button>
+    <nav class="mobile-menu__nav" aria-label="移动端章节导航">
+      <a href="#about"><span>01</span>关于我</a>
+      <a href="#education"><span>02</span>教育经历</a>
+      <a href="#skills"><span>03</span>技能栈</a>
+      <a href="#projects"><span>04</span>项目经历</a>
+      <a href="#works"><span>05</span>个人作品</a>
+      <a href="#contact"><span>06</span>联系方式</a>
+    </nav>
+    <p class="mobile-menu__note">唐小伟 · 2024 级 · UE5 × 影像</p>
+  </div>
 
   <main id="main">
     <!-- ================= 首屏 ================= -->
     <section class="hero" id="top">
-      <div class="hero__bg" aria-hidden="true">
-        <span class="shape shape--star">✳</span>
-        <span class="shape shape--ring"></span>
-        <span class="shape shape--blob"></span>
-      </div>
-
       <div class="container hero__inner">
-        <p class="eyebrow" data-reveal>PORTFOLIO · 2026 · UE5 × 虚拟制片</p>
+        <div class="hero__text">
+          <p class="eyebrow">
+            <span class="eyebrow__dot" aria-hidden="true"></span>
+            PORTFOLIO · 2024 级 · 求职中
+          </p>
 
-        <h1 class="hero__title" data-reveal style="--d:.05s">
-          <span class="hero__hi">你好，我是</span>
-          <span class="hero__name"><em>你的名字</em><svg class="underline" viewBox="0 0 600 40" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M6 30C70 18 128 32 196 26S322 18 396 28 512 32 594 24" /></svg></span>
-        </h1>
+          <h1 class="hero__title">
+            <span class="hero__line">在引擎里搭场景，</span>
+            <span class="hero__line hero__line--accent">在剪辑台上<em>讲故事</em>。</span>
+          </h1>
 
-        <p class="hero__sub" data-reveal style="--d:.15s">
-          计算机科学与技术 · 2026 届。<br />
-          我在引擎里搭场景，也在剪辑台上讲故事——<br />
-          关注 UE5 实时渲染、虚拟制片与影像叙事。
-        </p>
+          <p class="hero__lede">
+            我是唐小伟，XX 大学计算机科学与技术专业 2024 级本科生。方向在「技术」与「影像」的交叉处：
+            用 UE5 搭建实时场景，在虚拟制片流程里把拍摄和渲染接起来，也用剪辑、调色和声音，
+            把素材变成能讲清楚的故事。
+          </p>
 
-        <div class="hero__meta" data-reveal style="--d:.25s">
-          <span>XX 大学</span><span class="dot" aria-hidden="true">·</span>
-          <span>求职：UE5 虚拟制片 / 影视后期</span><span class="dot" aria-hidden="true">·</span>
-          <span>预计 2026.06 毕业</span>
+          <ul class="hero__meta">
+            <li><span class="hero__meta-label">求职方向</span>UE5 虚拟制片 / 影视后期</li>
+            <li><span class="hero__meta-label">现居</span>XX 市</li>
+            <li><span class="hero__meta-label">状态</span>可长期实习</li>
+          </ul>
+
+          <div class="hero__cta">
+            <a class="btn btn--primary" href="#projects">查看项目 <span aria-hidden="true">↓</span></a>
+            <a class="btn btn--ghost" href="mailto:Taing007@outlook.com">写封邮件 <span aria-hidden="true">↗</span></a>
+          </div>
         </div>
 
-        <div class="hero__cta" data-reveal style="--d:.35s">
-          <a class="btn btn--primary" href="#projects">查看项目 <span aria-hidden="true">↓</span></a>
-          <a class="btn btn--ghost" href="resume.pdf" download>下载简历 <span aria-hidden="true">↗</span></a>
-        </div>
-      </div>
-
-      <div class="hero__footer">
-        <span class="scroll-hint">SCROLL</span>
-        <span class="hero__sticker">OPEN TO WORK</span>
+        <!-- TODO: 替换为你的真实封面图：把 .cover__inner 里的占位 div 换成 <img src="assets/cover.jpg" alt="作品封面"> -->
+        <figure class="cover" data-reveal>
+          <span class="cover__badge" aria-hidden="true">FEATURED</span>
+          <div class="cover__frame">
+            <div class="cover__inner" aria-hidden="true">
+              <span class="cover__glyph">▶</span>
+              <span class="cover__placeholder">封面占位 · 替换为作品截图</span>
+            </div>
+          </div>
+          <figcaption class="cover__caption">
+            <span class="cover__num" aria-hidden="true">#01</span>
+            <span class="cover__text">
+              <span class="cover__title">《回声》</span>
+              <span class="cover__meta">UE5 虚拟制片短片 · 3 分钟 · 2025</span>
+            </span>
+          </figcaption>
+        </figure>
       </div>
     </section>
-
-    <!-- 滚动横幅 -->
-    <div class="marquee" aria-hidden="true">
-      <div class="marquee__track">
-        <div class="marquee__group">
-          <span>UE5 实时渲染</span><span class="marquee__star">✳</span>
-          <span>虚拟制片</span><span class="marquee__star">✳</span>
-          <span>影像叙事</span><span class="marquee__star">✳</span>
-          <span>剪辑与调色</span><span class="marquee__star">✳</span>
-          <span>2026 届毕业生</span><span class="marquee__star">✳</span>
-          <span>用技术讲好故事</span><span class="marquee__star">✳</span>
-        </div>
-        <div class="marquee__group">
-          <span>UE5 实时渲染</span><span class="marquee__star">✳</span>
-          <span>虚拟制片</span><span class="marquee__star">✳</span>
-          <span>影像叙事</span><span class="marquee__star">✳</span>
-          <span>剪辑与调色</span><span class="marquee__star">✳</span>
-          <span>2026 届毕业生</span><span class="marquee__star">✳</span>
-          <span>用技术讲好故事</span><span class="marquee__star">✳</span>
-        </div>
-      </div>
-    </div>
 
     <!-- ================= 01 关于我 ================= -->
     <section class="section" id="about">
@@ -145,19 +152,24 @@
 
         <div class="about-grid">
           <aside class="about-side" data-reveal>
-            <!-- TODO: 替换为你的照片：把下面 div 换成 <img src="assets/avatar.jpg" alt="你的名字的照片"> -->
-            <div class="about-portrait" aria-hidden="true">
-              <span class="about-portrait__mark">✳</span>
-              <span class="about-portrait__label">PORTRAIT<br />照片占位 · 待替换</span>
+            <!-- TODO: 替换为你的照片：把下面 div 换成 <img src="assets/avatar.jpg" alt="唐小伟的照片"> -->
+            <div class="portrait">
+              <div class="portrait__inner" aria-hidden="true">
+                <span class="portrait__glyph">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6" width="12" height="12" rx="2"/><path d="M14.5 10l6-3v10l-6-3"/></svg>
+                </span>
+                <span class="portrait__hint">照片占位 · 待替换</span>
+              </div>
+              <span class="portrait__sticker" aria-hidden="true">PHOTO</span>
             </div>
-            <p class="about-side__note">现居 · 某城市 ｜ 求职：UE5 虚拟制片 / 影视后期</p>
+            <p class="about-side__note">现居 XX 市 ｜ 求职：UE5 虚拟制片 / 影视后期</p>
           </aside>
 
           <div class="about-body">
-            <!-- TODO: 以下均为示例内容，替换为你自己的介绍 -->
+            <!-- TODO: 以下为示例内容，替换为你自己的介绍 -->
             <p class="lede" data-reveal>
-              我是 XX 大学计算机科学与技术专业 2026 届本科生。我的方向在「技术」与「影像」的交叉处：
-              用 UE5 搭建实时场景，在虚拟制片流程里把拍摄和渲染接起来，也用剪辑、调色和声音
+              我是唐小伟，XX 大学计算机科学与技术专业 2024 级本科生。我的方向在「技术」与「影像」的交叉处：
+              用 UE5 搭建实时场景，在虚拟制片流程里把拍摄和渲染接起来，也用剪辑、调色和声音，
               把素材变成能讲清楚的故事。
             </p>
             <p data-reveal>
@@ -201,12 +213,12 @@
 
         <ol class="timeline">
           <li class="tl-item" data-reveal>
-            <p class="tl-year">2022 — 2026</p>
+            <p class="tl-year">2024 — 至今</p>
             <div class="tl-body">
-              <h3 class="tl-title">XX 大学 · 计算机科学与技术（本科）</h3>
+              <h3 class="tl-title">XX 大学 · 计算机科学与技术（本科在读）</h3>
               <p class="tl-desc">
                 主修课程：数据结构、操作系统、计算机网络、图形学基础；
-                选修：影视制作、数字摄影、视觉叙事。毕业设计方向：基于 UE5 的虚拟制片流程实践。
+                选修：影视制作、数字摄影、视觉叙事。课程项目方向：基于 UE5 的虚拟制片流程实践。
               </p>
               <ul class="tags">
                 <li>GPA 3.6 / 4.0（示例）</li>
@@ -216,7 +228,7 @@
             </div>
           </li>
           <li class="tl-item" data-reveal style="--d:.06s">
-            <p class="tl-year">2023 — 2025</p>
+            <p class="tl-year">2025 — 至今</p>
             <div class="tl-body">
               <h3 class="tl-title">校园影像工作室 · 后期</h3>
               <p class="tl-desc">
@@ -304,18 +316,23 @@
 
         <ol class="projects">
           <li class="project" data-reveal>
-            <p class="project__num">01</p>
+            <div class="project__lead">
+              <span class="project__num">01</span>
+              <p class="project__date">2025.09 — 2026.01</p>
+              <div class="project__cover project__cover--1" aria-hidden="true"><span>▶</span></div>
+            </div>
             <div class="project__body">
               <div class="project__top">
                 <h3 class="project__title">UE5 虚拟制片短片《回声》</h3>
-                <p class="project__meta">毕业设计 · 2025.09 — 2026.03</p>
+                <p class="project__meta">课程项目 · 虚拟制片</p>
               </div>
               <p class="project__desc">
                 一个 3 分钟的科幻短片：实拍人物与 UE5 实时场景合成。我负责场景搭建、Sequencer 镜头编排
                 与绿幕合成测试，把「拍摄 — 渲染 — 合成」串成一套可复用的流程。
               </p>
               <p class="project__result">
-                结果：完成 3 分钟成片与一份虚拟制片流程文档，在校内展映一次。
+                <span class="project__result-label">结果</span>
+                完成 3 分钟成片与一份虚拟制片流程文档，在校内展映一次。
               </p>
               <div class="project__foot">
                 <ul class="tags">
@@ -331,18 +348,23 @@
           </li>
 
           <li class="project" data-reveal>
-            <p class="project__num">02</p>
+            <div class="project__lead">
+              <span class="project__num">02</span>
+              <p class="project__date">2025.03 — 2025.06</p>
+              <div class="project__cover project__cover--2" aria-hidden="true"><span>⧉</span></div>
+            </div>
             <div class="project__body">
               <div class="project__top">
                 <h3 class="project__title">沉浸式展项「时间切片」</h3>
-                <p class="project__meta">课程项目 · 2025.03 — 2025.06</p>
+                <p class="project__meta">课程项目 · 实时交互</p>
               </div>
               <p class="project__desc">
                 为校史馆做的互动展项：观众走动触发 UE5 实时场景变化，投影墙面呈现校园四季。
                 我负责实时场景、交互逻辑和现场调试，把「技术演示」做成观众愿意停下来看的体验。
               </p>
               <p class="project__result">
-                结果：展项连续运行 3 天，累计体验 200+ 人次，现场零故障。
+                <span class="project__result-label">结果</span>
+                展项连续运行 3 天，累计体验 200+ 人次，现场零故障。
               </p>
               <div class="project__foot">
                 <ul class="tags">
@@ -356,18 +378,23 @@
           </li>
 
           <li class="project" data-reveal>
-            <p class="project__num">03</p>
+            <div class="project__lead">
+              <span class="project__num">03</span>
+              <p class="project__date">2024.10 — 2025.01</p>
+              <div class="project__cover project__cover--3" aria-hidden="true"><span>◐</span></div>
+            </div>
             <div class="project__body">
               <div class="project__top">
                 <h3 class="project__title">纪录短片《早市》</h3>
-                <p class="project__meta">个人创作 · 2024.10 — 2025.01</p>
+                <p class="project__meta">个人创作 · 纪录影像</p>
               </div>
               <p class="project__desc">
                 8 分钟纪录短片，记录凌晨的菜市场。我负责拍摄、剪辑与调色，尝试用环境声和固定镜头
                 讲普通人的一天——这是我第一次完整走完「拍摄到成片」的全流程。
               </p>
               <p class="project__result">
-                结果：入围校内影像展，完成 DCP 与网络两个版本。
+                <span class="project__result-label">结果</span>
+                入围校内影像展，完成 DCP 与网络两个版本。
               </p>
               <div class="project__foot">
                 <ul class="tags">
@@ -397,56 +424,104 @@
 
         <ul class="works">
           <li class="work" data-reveal>
+            <div class="work__head">
+              <span class="work__num" aria-hidden="true">#01</span>
+              <span class="work__date">2026</span>
+            </div>
             <a class="work__link" href="#">
-              <span class="work__visual" aria-hidden="true"><span class="work__glyph">◐</span></span>
+              <span class="work__frame work__frame--1">
+                <span class="work__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l8.8 8.8 8.8-8.8a5.5 5.5 0 0 0 0-7.8z"/></svg>
+                </span>
+              </span>
               <span class="work__info">
                 <span class="work__title">UE5 城市街景渲染</span>
-                <span class="work__meta">实时渲染练习 · 2026</span>
+                <span class="work__meta">实时渲染练习 · Lumen</span>
               </span>
             </a>
           </li>
           <li class="work" data-reveal style="--d:.05s">
+            <div class="work__head">
+              <span class="work__num" aria-hidden="true">#02</span>
+              <span class="work__date">2025</span>
+            </div>
             <a class="work__link" href="#">
-              <span class="work__visual" aria-hidden="true"><span class="work__glyph">✦</span></span>
+              <span class="work__frame work__frame--2">
+                <span class="work__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 14.5s1.3 2 3.5 2 3.5-2 3.5-2"/><path d="M9 9.5h.01M15 9.5h.01"/></svg>
+                </span>
+              </span>
               <span class="work__info">
                 <span class="work__title">虚拟制片合成测试</span>
-                <span class="work__meta">绿幕 + Lumen · 2025</span>
+                <span class="work__meta">绿幕 + Lumen · 合成</span>
               </span>
             </a>
           </li>
           <li class="work" data-reveal style="--d:.1s">
+            <div class="work__head">
+              <span class="work__num" aria-hidden="true">#03</span>
+              <span class="work__date">2026</span>
+            </div>
             <a class="work__link" href="#">
-              <span class="work__visual" aria-hidden="true"><span class="work__glyph">✳</span></span>
+              <span class="work__frame work__frame--3">
+                <span class="work__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h7l-1 8 11-13h-7l0-7z"/></svg>
+                </span>
+              </span>
               <span class="work__info">
                 <span class="work__title">短片海报《回声》</span>
-                <span class="work__meta">平面设计 · 2026</span>
+                <span class="work__meta">平面设计 · 海报</span>
               </span>
             </a>
           </li>
           <li class="work" data-reveal style="--d:.15s">
+            <div class="work__head">
+              <span class="work__num" aria-hidden="true">#04</span>
+              <span class="work__date">2025</span>
+            </div>
             <a class="work__link" href="#">
-              <span class="work__visual" aria-hidden="true"><span class="work__glyph">⌘</span></span>
+              <span class="work__frame work__frame--4">
+                <span class="work__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3l14 8-6 1.4L9.5 19 5 3z"/></svg>
+                </span>
+              </span>
               <span class="work__info">
                 <span class="work__title">片头动效包装</span>
-                <span class="work__meta">After Effects · 2025</span>
+                <span class="work__meta">After Effects · 动效</span>
               </span>
             </a>
           </li>
           <li class="work" data-reveal style="--d:.2s">
+            <div class="work__head">
+              <span class="work__num" aria-hidden="true">#05</span>
+              <span class="work__date">2025</span>
+            </div>
             <a class="work__link" href="#">
-              <span class="work__visual" aria-hidden="true"><span class="work__glyph">◭</span></span>
+              <span class="work__frame work__frame--5">
+                <span class="work__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6" width="12" height="12" rx="2"/><path d="M14.5 10l6-3v10l-6-3"/></svg>
+                </span>
+              </span>
               <span class="work__info">
                 <span class="work__title">调色前后对比</span>
-                <span class="work__meta">DaVinci Resolve · 2025</span>
+                <span class="work__meta">DaVinci Resolve · 调色</span>
               </span>
             </a>
           </li>
           <li class="work" data-reveal style="--d:.25s">
+            <div class="work__head">
+              <span class="work__num" aria-hidden="true">#06</span>
+              <span class="work__date">2024</span>
+            </div>
             <a class="work__link" href="#">
-              <span class="work__visual" aria-hidden="true"><span class="work__glyph">⧉</span></span>
+              <span class="work__frame work__frame--6">
+                <span class="work__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l10-2v13"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="16.5" cy="16" r="2.5"/></svg>
+                </span>
+              </span>
               <span class="work__info">
                 <span class="work__title">校园摄影集</span>
-                <span class="work__meta">摄影 · 2024</span>
+                <span class="work__meta">摄影 · 图片编辑</span>
               </span>
             </a>
           </li>
@@ -455,7 +530,7 @@
         <p class="works-note" data-reveal>
           更多过程素材与视频：
           <!-- TODO: 替换为你的 GitHub / 作品主页 / 网盘链接 -->
-          <a href="https://github.com/yourname" target="_blank" rel="noopener noreferrer">github.com/yourname ↗</a>
+          <a href="https://github.com/Sooyaaaa77" target="_blank" rel="noopener noreferrer">github.com/Sooyaaaa77 ↗</a>
         </p>
       </div>
     </section>
@@ -467,27 +542,25 @@
           <p class="kicker"><span class="kicker__num">06</span> 联系方式</p>
           <h2 class="section-title">一起做点<em>看得见</em>的事。</h2>
           <p class="section-lead">
-            正在寻找 2026 届校招 / 实习机会：UE5 虚拟制片、影视后期、数字媒体相关岗位。
-            欢迎随时联系——我通常 24 小时内回复。（示例文案，替换为你的真实状态）
+            寻找 UE5 虚拟制片、影视后期方向的实习机会。欢迎随时联系——我通常 24 小时内回复。
           </p>
         </header>
 
         <div class="contact-grid">
-          <!-- TODO: 替换为你的真实邮箱 -->
-          <a class="contact-mail" href="mailto:you@example.com" data-reveal>
-            <span class="contact-mail__label">Email</span>
-            <span class="contact-mail__value">you@example.com</span>
+          <a class="contact-mail" href="mailto:Taing007@outlook.com" data-reveal>
+            <span class="contact-mail__label">EMAIL</span>
+            <span class="contact-mail__value">Taing007@outlook.com</span>
             <span class="contact-mail__arrow" aria-hidden="true">↗</span>
           </a>
 
           <ul class="contact-links" data-reveal style="--d:.06s">
             <li>
-              <!-- TODO: 替换为你的 GitHub 主页 -->
-              <a href="https://github.com/yourname" target="_blank" rel="noopener noreferrer">
-                <span>GitHub</span><span class="contact-links__value">github.com/yourname ↗</span>
+              <a href="https://github.com/Sooyaaaa77" target="_blank" rel="noopener noreferrer">
+                <span>GitHub</span><span class="contact-links__value">Sooyaaaa77 ↗</span>
               </a>
             </li>
             <li>
+              <!-- TODO: 简历确定后替换 resume.pdf -->
               <a href="resume.pdf" download>
                 <span>简历</span><span class="contact-links__value">resume.pdf ↓</span>
               </a>
@@ -505,14 +578,43 @@
 
   <!-- ================= 页脚 ================= -->
   <footer class="footer">
-    <div class="container footer__inner">
-      <p class="footer__copy">
-        © <span id="year">2026</span> 你的名字 · UE5 × 影像 · 手写 HTML / CSS / JavaScript，部署在自己的云服务器上。
-      </p>
-      <p class="footer__note">
-        本站为课程作业 · 内容均为示例占位，发布前请替换为真实信息
-      </p>
-      <a class="footer__top" href="#top" aria-label="回到顶部">↑</a>
+    <div class="container">
+      <div class="footer__grid">
+        <div class="footer__brand">
+          <a class="logo logo--footer" href="#top" aria-label="回到首页">
+            <span class="logo__main">Portfolio</span>
+            <span class="logo__year" aria-hidden="true">2026</span>
+          </a>
+          <p class="footer__note">
+            唐小伟 · 2024 级 · UE5 × 影像。<br />
+            手写 HTML / CSS / JavaScript，部署在自己的云服务器上。
+          </p>
+          <span class="sticker sticker--red" aria-hidden="true">OPEN TO WORK</span>
+        </div>
+
+        <nav class="footer__col" aria-label="页脚章节导航">
+          <h2 class="footer__title">SITE</h2>
+          <a href="#about">关于我</a>
+          <a href="#education">教育经历</a>
+          <a href="#skills">技能栈</a>
+          <a href="#projects">项目经历</a>
+          <a href="#works">个人作品</a>
+          <a href="#contact">联系方式</a>
+        </nav>
+
+        <div class="footer__col">
+          <h2 class="footer__title">CONNECT</h2>
+          <a href="mailto:Taing007@outlook.com">Taing007@outlook.com</a>
+          <a href="https://github.com/Sooyaaaa77" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+          <a href="resume.pdf" download>简历 PDF ↓</a>
+          <a href="#top">回到顶部 ↑</a>
+        </div>
+      </div>
+
+      <div class="footer__bottom">
+        <p>© <span id="year">2026</span> 唐小伟. 保留所有权利。</p>
+        <p>课程作业 · 内容为示例占位，发布前替换为真实信息</p>
+      </div>
     </div>
   </footer>
 

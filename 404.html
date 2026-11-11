@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN" data-theme="light">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -8,12 +8,12 @@
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link rel="stylesheet" href="style.css" />
   <script>
-    /* 与首页一致：优先读取已保存的主题 */
     (function () {
+      document.documentElement.classList.add("js");
       try {
-        var saved = localStorage.getItem("portfolio-theme");
-        var theme = saved || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
-        document.documentElement.setAttribute("data-theme", theme);
+        if (localStorage.getItem("portfolio-theme") === "dark") {
+          document.documentElement.setAttribute("data-theme", "dark");
+        }
       } catch (e) {
         /* 忽略 */
       }
@@ -32,15 +32,17 @@
       </p>
       <p class="notfound__actions">
         <a class="btn btn--primary" href="/">回到首页 <span aria-hidden="true">↗</span></a>
-        <a class="link-arrow" href="mailto:you@example.com">you@example.com <span aria-hidden="true">↗</span></a>
+        <a class="link-arrow" href="mailto:Taing007@outlook.com">Taing007@outlook.com <span aria-hidden="true">↗</span></a>
       </p>
     </div>
   </main>
 
   <footer class="footer">
-    <div class="container footer__inner">
-      <p class="footer__copy">© <span id="year">2026</span> 你的名字</p>
-      <a class="footer__top" href="/" aria-label="回到首页">↑</a>
+    <div class="container">
+      <div class="footer__bottom">
+        <p>© <span id="year">2026</span> 唐小伟 · 2024 级</p>
+        <p><a href="/">回到首页 ↑</a></p>
+      </div>
     </div>
   </footer>
 
