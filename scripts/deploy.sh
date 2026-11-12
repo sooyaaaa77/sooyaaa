@@ -34,6 +34,12 @@ for f in "${SITE_FILES[@]}"; do
   fi
 done
 
+# 可选：通过 SSH_KEY 指定私钥（Windows 本地常见），不填则用默认 ~/.ssh 配置
+SSH_OPTS=()
+if [ -n "${SSH_KEY:-}" ]; then
+  SSH_OPTS=(-i "${SSH_KEY}" -o StrictHostKeyChecking=accept-new)
+fi
+
 ARCHIVE="mysite-$(date +%Y%m%d-%H%M%S).tar.gz"
 trap 'rm -f "$ARCHIVE"' EXIT
 
@@ -41,10 +47,10 @@ echo "==> 打包静态文件 -> ${ARCHIVE}"
 tar -czf "$ARCHIVE" "${SITE_FILES[@]}"
 
 echo "==> 上传到 ${TARGET}:/tmp/${ARCHIVE}"
-scp "$ARCHIVE" "${TARGET}:/tmp/${ARCHIVE}"
+scp "${SSH_OPTS[@]}" "$ARCHIVE" "${TARGET}:/tmp/${ARCHIVE}"
 
 echo "==> 在服务器上解压并重载 Nginx"
-ssh "$TARGET" "set -e
+ssh "${SSH_OPTS[@]}" "$TARGET" "set -e
   sudo mkdir -p '${REMOTE_DIR}'
   sudo tar -xzf '/tmp/${ARCHIVE}' -C '${REMOTE_DIR}'
   sudo chown -R www-data:www-data '${REMOTE_DIR}'
