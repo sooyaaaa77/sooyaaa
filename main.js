@@ -269,5 +269,67 @@
     });
   }
 
+  /* ---------- 8. 吸顶导航滑动指示块 ---------- */
+  var subnav = $(".subnav");
+  var subnavLinks = $(".subnav__links");
+  var indicator = null;
+
+  function updateIndicator() {
+    if (!subnavLinks) return;
+    if (!indicator) {
+      indicator = document.createElement("span");
+      indicator.className = "subnav__indicator";
+      indicator.setAttribute("aria-hidden", "true");
+      subnavLinks.insertBefore(indicator, subnavLinks.firstChild);
+      subnavLinks.classList.add("has-indicator");
+    }
+    var active = subnavLinks.querySelector("a.is-active");
+    if (!active) {
+      indicator.style.opacity = "0";
+      return;
+    }
+    indicator.style.opacity = "1";
+    indicator.style.width = active.offsetWidth + "px";
+    indicator.style.transform =
+      "translate3d(" + active.offsetLeft + "px, -50%, 0)";
+  }
+
+  /* 吸顶状态：masthead 滚出视口后给 subnav 加阴影 */
+  var masthead = $(".masthead");
+  function updateStuck() {
+    if (!subnav) return;
+    var limit = masthead ? masthead.offsetHeight - 1 : 60;
+    subnav.classList.toggle("is-stuck", window.scrollY > limit);
+  }
+
+  var rafId = null;
+  window.addEventListener(
+    "scroll",
+    function () {
+      if (rafId) return;
+      rafId = window.requestAnimationFrame(function () {
+        rafId = null;
+        updateIndicator();
+      });
+    },
+    { passive: true }
+  );
+  window.addEventListener("resize", updateIndicator);
+  window.addEventListener("load", updateIndicator);
+  updateIndicator();
+
+  /* 高亮状态由 IntersectionObserver 异步添加，用 MutationObserver 保证指示块跟随 */
+  if (window.MutationObserver && subnavLinks) {
+    new MutationObserver(updateIndicator).observe(subnavLinks, {
+      attributes: true,
+      attributeFilter: ["class"],
+      subtree: true,
+    });
+  }
+
+  window.addEventListener("scroll", updateStuck, { passive: true });
+  window.addEventListener("resize", updateStuck);
+  updateStuck();
+
   /* ===== 后续迭代交互在此追加 ===== */
 })();

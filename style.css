@@ -1785,6 +1785,128 @@ section#top {
   }
 }
 
+/* ---------- 18.5 细节动效（v0.4） ---------- */
+@keyframes heroLineIn {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 26px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes heroUnderlineIn {
+  to {
+    background-size: 100% 0.1em;
+  }
+}
+
+.js .hero__title .hero__line {
+  opacity: 0;
+  transform: translate3d(0, 26px, 0);
+  animation: heroLineIn 0.9s var(--ease) 0.08s forwards;
+}
+
+.js .hero__title .hero__line:nth-child(2) {
+  animation-delay: 0.26s;
+}
+
+.js .hero__line--accent em {
+  background-size: 0% 0.1em;
+  animation: heroUnderlineIn 0.7s var(--ease) 0.75s forwards;
+}
+
+/* 章节标题下划线：进入视口时从左展开 */
+.js .section-head[data-reveal] .section-title em {
+  background-size: 0 0.09em;
+  transition: background-size 0.9s var(--ease) 0.12s;
+}
+
+.js .section-head[data-reveal].is-in .section-title em {
+  background-size: 100% 0.09em;
+}
+
+/* 项目行悬停 */
+.project__cover {
+  transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease);
+}
+
+.project:hover .project__cover {
+  transform: translate3d(0, -4px, 0) rotate(-1.5deg);
+  box-shadow: 5px 7px 0 rgba(17, 17, 16, 0.18);
+}
+
+.project__title {
+  transition: color 0.2s var(--ease);
+}
+
+.project:hover .project__title {
+  color: var(--accent);
+}
+
+.project .link-arrow {
+  transition: transform 0.25s var(--ease);
+}
+
+.project:hover .link-arrow {
+  transform: translate3d(3px, -1px, 0);
+}
+
+/* 作品卡图标 */
+.work__icon {
+  transition: transform 0.4s var(--ease);
+}
+
+.work__link:hover .work__icon {
+  transform: rotate(-8deg) scale(1.08);
+}
+
+/* 吸顶导航滑动指示块 */
+.subnav__links {
+  position: relative;
+}
+
+.subnav__indicator {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  z-index: 0;
+  width: 0;
+  height: 26px;
+  border-radius: 6px;
+  background: var(--ink);
+  opacity: 0;
+  transform: translate3d(0, -50%, 0);
+  transition: transform 0.35s var(--ease), width 0.35s var(--ease),
+    opacity 0.2s linear;
+  pointer-events: none;
+}
+
+.subnav__links.has-indicator a {
+  position: relative;
+  z-index: 1;
+}
+
+.subnav__links.has-indicator a.is-active {
+  background: transparent;
+  color: var(--paper);
+}
+
+.subnav__links.has-indicator .subnav__indicator {
+  opacity: 1;
+}
+
+/* 吸顶后加一条细阴影，滚动状态更清楚 */
+.subnav {
+  transition: box-shadow 0.25s var(--ease);
+}
+
+.subnav.is-stuck {
+  box-shadow: 0 8px 20px rgba(17, 17, 16, 0.07);
+}
+
 /* ---------- 19. 降低动效 ---------- */
 @media (prefers-reduced-motion: reduce) {
   html {
