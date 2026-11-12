@@ -1,10 +1,46 @@
 # 部署手册：把网站发布到公网云服务器
 
-> 目标：用**最原始、最透明**的方式（apt 装 Nginx + 手动上传文件）把静态网站部署到阿里云服务器，
+> 目标：用**最原始、最透明**的方式（apt 装 Nginx + 手动上传文件）把静态网站部署到云服务器，
 > 用公网 IP 访问。全程不使用宝塔面板、LNMP 一键包、云厂商「一键建站」镜像等工具。
+>
+> 本项目实际部署信息见下方「零、实际部署记录」，其余章节是可复用的通用步骤。
 >
 > 阅读前提：已完成 `docs/01-requirements.md`、`docs/02-design.md`、`docs/03-plan.md`；
 > 本地能运行 `python -m http.server` 预览网站。
+
+---
+
+## 零、实际部署记录（本项目，2026-11-12）
+
+| 项目 | 实际值 |
+| --- | --- |
+| 云厂商 / 产品 | 腾讯云 · 轻量应用服务器（试用 1 个月） |
+| 地域 | 中国大陆 · 四川成都 |
+| 公网 IP | `43.136.175.239` |
+| 操作系统 | Ubuntu 22.04.5 LTS |
+| 登录用户 | `ubuntu`（**不是 root**，管理命令需 `sudo`） |
+| SSH 私钥 | 本地 `_scratch/deploy_key`（`~/.ssh/` 下的临时密钥，不提交仓库） |
+| Nginx 版本 | 1.18.0（`apt install nginx` 安装） |
+| 站点根目录 | `/var/www/mysite` |
+| 配置文件 | `/etc/nginx/sites-available/mysite` → `sites-enabled/mysite` |
+| 访问地址 | <http://43.136.175.239> |
+| 域名 | `sooyaaa.online`（已实名，**未备案**，暂不解析；大陆地域对外提供网站服务需 ICP 备案） |
+
+实际执行过的命令（可对照复现）：
+
+```bash
+# 1. 首次初始化：安装 Nginx、建目录、启用配置
+bash scripts/bootstrap-server.sh ubuntu@43.136.175.239
+
+# 2. 日常发布：打包上传并重载
+SSH_KEY=_scratch/deploy_key DEPLOY_TARGET=ubuntu@43.136.175.239 bash scripts/deploy.sh
+
+# 3. 远端检查
+ssh -i _scratch/deploy_key ubuntu@43.136.175.239 'nginx -v; systemctl status nginx --no-pager | head -3'
+```
+
+> 注意：腾讯云轻量 Ubuntu 镜像默认允许 `ubuntu` 用户免密 sudo；如果换成 root 登录，
+> `bootstrap-server.sh` 与 `deploy.sh` 里的 `sudo` 也能正常工作（root 下 sudo 是空操作）。
 
 ---
 
