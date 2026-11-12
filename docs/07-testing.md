@@ -1,13 +1,13 @@
 # 07 · 测试报告
 
-> 状态：v0.3 ｜ 最后更新：2026-11-11
+> 状态：v0.4 ｜ 最后更新：2026-11-12
 > 关联：`docs/01-requirements.md`（验收标准）、`docs/03-plan.md`（排期）、`docs/04-deployment.md`（部署手册）
 > 原则：**只写真实结果**。已执行的检查附命令与结论；未执行的项明确标注，不预填分数、不伪造截图。
 > 状态图例：✅ 通过｜✅ 走查（代码或截图确认，未真机实测）｜⏳ 待执行｜⚠️ 已知限制
 
 ## 1. 测试目标与范围
 
-课程作业的验收不只看页面好不好看，还看流程是否完整。v0.3 改版后，测试围绕五个维度：
+课程作业的验收不只看页面好不好看，还看流程是否完整。v0.4 上线后，测试围绕五个维度：
 
 | 维度 | 课程要求 | 本报告的验证方式 |
 |---|---|---|
@@ -15,7 +15,7 @@
 | 多端可用 | 360px 手机到 1920px 桌面布局正常 | 断点走查 + 无头截图 + 真机待测 |
 | 可访问性 | 键盘可操作、语义化、对比度、降低动效 | 代码走查 + 对比度计算 + 焦点陷阱检查 |
 | 视觉一致性 | 白底贴纸编辑风格在深浅色下都成立，无 v0.2 跑马灯 / 自定义光标残留 | Edge 无头截图 + 旧样式全局扫描 |
-| 部署可访问 | 公网 IP 能打开，404、缓存、压缩正确 | 待服务器就绪后执行 |
+| 部署可访问 | 公网 IP 能打开，404、缓存、压缩正确 | 已执行：对线上地址逐项发请求（见第 8.2 节） |
 
 **在范围内**：`index.html`、`404.html`、`style.css`、`main.js`、Nginx 配置与部署脚本的静态检查，以及 `scripts/screenshot.mjs` 截图自检。
 **不在本期**：后端接口、数据库、登录、IE 及旧版浏览器、打印样式、域名/HTTPS/CDN、屏幕阅读器全量测试。
@@ -29,9 +29,9 @@
 | Node.js | v22.14.0 | `node --check`、`scripts/screenshot.mjs` |
 | Python | 3.12.10 | HTML 解析、文本检查与本地静态服务器 |
 | 浏览器 | Chrome / Edge 现代版本 | 版本号未记录；截图使用本机 Edge 无头模式 |
-| 服务器 | 阿里云 ECS · Ubuntu 22.04 | **尚未购买**，部署验证待执行 |
+| 服务器 | 腾讯云轻量应用服务器 · Ubuntu 22.04.5 LTS · Nginx 1.18.0 · 公网 `43.136.175.239` | 已真实部署，线上请求验证通过 |
 | 手机真机 | Android / iOS | 尚未测试；仅用无头浏览器模拟 390×844 |
-| 网络 | 家庭宽带；手机 4G | 4G 访问待服务器就绪后测试 |
+| 网络 | 家庭宽带（家庭网络访问已验证）；手机 4G 未测 | 手机流量访问待补测 |
 
 > 注意：项目保持零第三方依赖，因此**没有引入** Playwright、Selenium 等浏览器自动化工具。v0.3 使用的 `scripts/screenshot.mjs`（205 行）直接调用本机 Edge 的 DevTools 协议，属于开发自检脚本，不是测试框架；交互结论仍需人工浏览器走查后才能签字验收。
 
@@ -39,10 +39,10 @@
 
 | 编号 | 检查项 | 命令 / 方法 | 实际结果 | 结论 |
 |---|---|---|---|---|
-| SC-01 | JS 语法 | `node --check main.js` | 无输出（退出码 0），文件 273 行 | ✅ 通过 |
+| SC-01 | JS 语法 | `node --check main.js` | 无输出（退出码 0），文件 335 行 | ✅ 通过 |
 | SC-02 | HTML 标签闭合 | Python `html.parser` 栈匹配 | `index.html` 623 行、`404.html` 54 行，均 0 错误、0 未闭合 | ✅ 通过 |
 | SC-03 | Shell 脚本语法 | `bash -n scripts/deploy.sh` | 无输出（退出码 0） | ✅ 通过 |
-| SC-04 | CSS 括号配平 | 统计 `{` 与 `}` | `style.css` 1807 行，`{` 与 `}` 各 253 个（含 5 个 `@media` 包裹，共 248 条规则），计数一致 | ✅ 通过 |
+| SC-04 | CSS 括号配平 | 统计 `{` 与 `}` | `style.css` 1929 行，`{` 与 `}` 各 278 个，计数一致 | ✅ 通过 |
 | SC-05 | 旧样式残留扫描 | `grep` 旧色值、`marquee` 与自定义光标类名 | 0 命中 | ✅ 通过 |
 
 ```bash
@@ -160,6 +160,21 @@ PY
 
 局限：① 无头截图不等于真机，触屏滚动、地址栏高度、字体回退都看不到；② 只覆盖 Edge 一个内核；③ 目视检查带主观性，不能替代设计评审；④ 截图不能证明交互正确（交互见第 4 节），对比度靠计算而非截图（见第 7 节）。
 
+
+### 6.1 v0.4 动效增量检查（2026-11-12）
+
+| 编号 | 检查项 | 预期 | 实际结果 | 结论 |
+|---|---|---|---|---|
+| MO-01 | 首屏分层入场 | 两行标题与摘要依次上移淡入，不造成布局抖动 | 截图与录屏走查正常；`prefers-reduced-motion` 下直接显示 | ✅ 走查 |
+| MO-02 | 标题红下划线绘制 | 首屏「讲故事」下划线自左向右展开 | 动画 0.75s 延迟后展开正常 | ✅ 走查 |
+| MO-03 | 区块标题下划线 | 进入视口时 em 下划线从 0 展开到 100% | IntersectionObserver 进入触发正常 | ✅ 走查 |
+| MO-04 | 项目封面悬停 | 上浮 4px、轻微旋转、出现硬阴影，标题变红 | 桌面端悬停正常，移动端不触发 | ✅ 走查 |
+| MO-05 | 作品图标悬停 | 图标旋转放大 1.08 倍 | 正常 | ✅ 走查 |
+| MO-06 | 吸顶导航指示块 | 黑色胶囊滑动到当前章节，宽度与文字一致 | 修复后正常；见下方缺陷记录 | ✅ 已修复 |
+| MO-07 | 导航吸附阴影 | 页面滚动过 masthead 后 subnav 出现阴影 | 正常 | ✅ 走查 |
+
+> 实现教训（DEF-06）：指示块最初用 `scroll` 事件计算位置，但当前章节的 `is-active` 由 `IntersectionObserver` 异步添加，导致首次出现时指示块宽度为 0、不可见。改为 `MutationObserver` 监听导航 class 变化后重新计算，问题消失。
+
 ## 7. 可访问性检查
 
 | 编号 | 检查项 | 实现依据 | 状态 |
@@ -217,21 +232,21 @@ for p in / /style.css /main.js /favicon.svg /resume.pdf /404.html /nope; do
 done
 ```
 
-### 8.2 线上验证清单（待服务器就绪后执行）
+### 8.2 线上验证清单（2026-11-12 已对线上地址执行）
 
 以下项目**全部未执行**，服务器尚未购买。命令按 `docs/04-deployment.md` 编写，执行后回填状态。
 
 | 编号 | 检查项 | 命令 / 操作 | 预期 | 状态 |
 |---|---|---|---|---|
-| DP-01 | Nginx 配置语法 | `sudo nginx -t` | `syntax is ok` / `test is successful` | ⏳ |
-| DP-02 | 首页与 Content-Type | `curl -I http://<IP>/` | `200 OK`，`text/html` | ⏳ |
-| DP-03 | gzip 压缩 | `curl -sI -H "Accept-Encoding: gzip" http://<IP>/style.css` | 含 `Content-Encoding: gzip` | ⏳ |
-| DP-04 | 静态资源缓存 | `curl -sI http://<IP>/style.css` | 含 `Cache-Control` 与 `Expires`（7 天） | ⏳ |
-| DP-05 | 404 状态与页面 | `curl -s -o /dev/null -w "%{http_code}" http://<IP>/no-such-page` | 返回 `404`，页面为自定义 `404.html` | ⏳ |
-| DP-06 | 安全响应头 | `curl -sI http://<IP>/` | 含 `X-Content-Type-Options`、`X-Frame-Options`、`Referrer-Policy` | ⏳ |
-| DP-07 | 隐藏文件禁止访问 | `curl -sI http://<IP>/.git/config` | `403 Forbidden` | ⏳ |
+| DP-01 | Nginx 配置语法 | `sudo nginx -t` | `syntax is ok` / `test is successful` | ✅ |
+| DP-02 | 首页与 Content-Type | 请求 `http://43.136.175.239/` | `200`，`text/html; charset=utf-8`，29620 字节 | ✅ |
+| DP-03 | gzip 压缩 | 带 `Accept-Encoding: gzip` 请求 `/style.css` | 响应含 `Content-Encoding: gzip` | ✅ |
+| DP-04 | 静态资源缓存 | 请求 `/style.css` 响应头 | `Cache-Control: max-age=604800`，`Expires` 为 7 天后 | ✅ |
+| DP-05 | 404 状态与页面 | 请求 `/no-such-page` | 返回 `404`，响应体为自定义 404 页（1809 字节） | ✅ |
+| DP-06 | 安全响应头 | 请求首页响应头 | 含 `X-Content-Type-Options: nosniff`、`X-Frame-Options: SAMEORIGIN`、`Referrer-Policy: strict-origin-when-cross-origin` | ✅ |
+| DP-07 | 隐藏文件禁止访问 | 请求 `/.git/config` | 返回 `403`，Nginx error.log 记录 `access forbidden by rule` | ✅ |
 | DP-08 | 手机 4G 访问 | 关 Wi-Fi，手机流量打开 `http://<IP>/` | 5 秒内加载完成，布局正常 | ⏳ |
-| DP-09 | 日志无异常 | `tail -n 50 /var/log/nginx/mysite.error.log` | 无 5xx、无权限报错 | ⏳ |
+| DP-09 | 日志无异常 | 查看 `/var/log/nginx/mysite.error.log` | 仅有上述 403 探测记录，无 5xx、无权限异常 | ✅ |
 
 ```bash
 sudo nginx -t && sudo systemctl reload nginx
@@ -265,7 +280,8 @@ curl -s -o /dev/null -w "%{http_code}\n" http://<IP>/no-such-page
 | DEF-03 | v0.1 浅色主题 `--muted`（3.39:1）、`--accent`（3.65:1）低于 AA 4.5:1 | 低 | ✅ 已修复（v0.2 新配色重算全部达标，v0.3 收敛色板后仍达标） |
 | DEF-04 | 3 处项目「查看详情」与 6 处作品卡使用 `href="#"`，点击无跳转 | 中 | 待替换为真实链接 |
 | DEF-05 | 移动菜单打开后未做焦点陷阱，Tab 可移出菜单到页面主体 | 低 | ✅ 已修复（v0.2 新增 Tab 循环、Esc 关闭、焦点回归；v0.3 保留并新增 `#menu-close` 关闭按钮） |
-| DEF-06 | 服务器尚未购买，部署与线上验证整体阻塞 | 阻塞 | 待外部条件 |
+| DEF-06 | 吸顶导航指示块首次不显示（`is-active` 异步添加导致宽度为 0） | 中 | ✅ 已修复（MutationObserver 监听 class 变化后重算） |
+| DEF-07 | 服务器未购买曾阻塞部署与线上验证 | 阻塞 | ✅ 已关闭：腾讯云 Ubuntu 22.04 部署成功，公网 IP 可访问 |
 
 ## 11. 测试结论与遗留风险
 
@@ -276,9 +292,10 @@ curl -s -o /dev/null -w "%{http_code}\n" http://<IP>/no-such-page
 | 响应式 / 兼容性 | 断点逻辑已实现，390 / 1440 两档截图通过；其余视口与真机待验证 ⏳ |
 | 视觉回归（v0.3） | 9 张无头截图目视通过 ✅；不代表真机与交互通过 |
 | 可访问性 | 对比度全部 AA、菜单焦点陷阱已修复 ✅；Tab 顺序与 200% 缩放待人工验证 ⏳ |
-| 部署 / 性能 | 本地冒烟通过；线上验证与 Lighthouse 未执行，不能宣称通过 ⏳ |
+| 部署 | 线上 DP-01～DP-07、DP-09 已通过；DP-08 手机 4G 待测 ✅/⏳ |
+| 性能 | Lighthouse 未执行，不能宣称通过 ⏳ |
 
-一句话总结：**代码层面已完成，静态检查、本地冒烟与无头截图自检均通过；但「浏览器交互走查、真机测试、Lighthouse、线上访问」四项尚未执行，验收前必须补齐。**
+一句话总结：**代码与部署已完成：静态检查、本地冒烟、无头截图自检、线上 DP-01～DP-09（除手机 4G）均通过；仍待「浏览器交互走查、手机真机测试、Lighthouse、演示视频与真实内容替换」。**
 
 | 遗留风险 | 影响 | 应对 |
 |---|---|---|
