@@ -66,19 +66,18 @@ python -m http.server 8080
 | 交互 | 原生 JavaScript（IntersectionObserver、requestAnimationFrame） | 不引入框架，体积小，可完全讲清楚 |
 | 字体 | 系统字体栈 | 不加载外链字体，首屏快、离线可用 |
 | 版本管理 | Git（Conventional Commits） | 每次改动可回溯 |
-| 部署 | 阿里云 ECS（Ubuntu 22.04）+ apt 安装 Nginx | 手动配置，不使用任何面板/一键包 |
+| 部署 | 腾讯云轻量应用服务器（Ubuntu 22.04）+ apt 安装 Nginx | 手动配置，不使用任何面板/一键包 |
 
 ## 部署
 
 完整步骤见 [docs/04-deployment.md](docs/04-deployment.md)。简版：
 
 ```bash
-# 1. 配置好站点（首次）
-scp deploy/nginx.conf root@<服务器IP>:/tmp/mysite.conf
-# 服务器上：移动到 sites-available、改 server_name、软链、nginx -t、reload
+# 首次：初始化服务器（装 Nginx、建站点、上传配置）
+SSH_KEY=_scratch/deploy_key ./scripts/bootstrap-server.sh ubuntu@<服务器IP>
 
-# 2. 每次发布
-./scripts/deploy.sh root@<服务器IP>
+# 每次发布：打包上传并重载 Nginx
+SSH_KEY=_scratch/deploy_key ./scripts/deploy.sh ubuntu@<服务器IP>
 ```
 
 ## 文档
@@ -94,13 +93,16 @@ scp deploy/nginx.conf root@<服务器IP>:/tmp/mysite.conf
 - [测试报告](docs/07-testing.md) — 测试用例与结果
 - [项目总结](docs/08-summary.md) — 复盘、收获与改进
 - [内容替换清单](docs/content-checklist.md) — 发布前逐项勾选
+- [演示视频脚本](docs/09-demo-video-script.md) — 3–5 分钟录制分镜与台词
 
 ## 发布前必做
 
-1. 按 [content-checklist.md](docs/content-checklist.md) 替换全部示例内容；
+1. 按 [content-checklist.md](docs/content-checklist.md) 替换全部示例内容（项目名、描述、照片位、简历）；
 2. 用真实简历替换 `resume.pdf`；
-3. 购买服务器并按部署手册完成上线；
-4. 手机流量验证公网访问。
+3. 录制演示视频并按 `docs/09-demo-video-script.md` 检查；
+4. 在 `submission/2026316010013-唐小伟-期末作品/` 中补齐截图与视频，按 PDF 要求打成 `2026316010013-唐小伟-期末作品.zip`。
+
+服务器与 GitHub 已完成：线上 <http://43.136.175.239>，仓库 <https://github.com/sooyaaaa77/sooyaaa>。
 
 ## 许可
 
